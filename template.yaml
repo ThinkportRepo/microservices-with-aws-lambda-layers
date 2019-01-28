@@ -1,0 +1,42 @@
+# sam package     --template-file template.yaml     --output-template-file packaged.yaml     --s3-bucket thinkport-layers-test --profile thinkport
+# sam deploy --region eu-central-1  --template-file packaged.yaml --stack-name serverless-layers  --profile thinkport
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Metadata:
+  AWS::ServerlessRepo::Application:
+    Name: microservices-with-layers
+    Description: Microservices with layers
+    Author: Roman Krivtsov
+    SpdxLicenseId: Apache-2.0
+    LicenseUrl: LICENSE.txt
+    ReadmeUrl: README.md
+    HomePageUrl: https://github.com/ThinkportRepo/microservices-with-aws-lambda-layers.git
+    SemanticVersion: 0.0.1
+    SourceCodeUrl: https://github.com/ThinkportRepo/microservices-with-aws-lambda-layers.git
+
+Resources:
+  SharedLayer:
+    Type: "AWS::Serverless::LayerVersion"
+    Properties:
+      CompatibleRuntimes: 
+        - nodejs8.10
+      ContentUri: ./layer/http-lambda-response-shared-library
+      Description: Shared internal library
+      LayerName: http-lambda-response-shared-library
+      LicenseInfo: Apache-2.0
+  UsersFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs8.10
+      CodeUri: "./lambdas/users"
+      Layers:
+        - !Ref SharedLayer
+  PostsFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      Runtime: nodejs8.10
+      CodeUri: "./lambdas/users"
+      Layers:
+        - !Ref SharedLayer
