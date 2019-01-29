@@ -9,8 +9,8 @@ function getPosts() {
 
 module.exports.handler = async () => {
     try {
-        const user = await getPosts();
-        return reponseFormat.success(user);
+        const posts = await getPosts();
+        return reponseFormat.success(posts);
     } catch (e) {
         return reponseFormat.error(e);
     }

@@ -18,7 +18,7 @@ Resources:
   SharedLayer:
     Type: "AWS::Serverless::LayerVersion"
     Properties:
-      CompatibleRuntimes: 
+      CompatibleRuntimes:
         - nodejs8.10
       ContentUri: ./layer/http-lambda-response-shared-library
       Description: Shared internal library
@@ -37,6 +37,14 @@ Resources:
     Properties:
       Handler: index.handler
       Runtime: nodejs8.10
-      CodeUri: "./lambdas/users"
+      CodeUri: "./lambdas/posts"
       Layers:
         - !Ref SharedLayer
+  BrainFuckFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: file.bf
+      Runtime: provided
+      CodeUri: "./lambdas/bf"
+      Layers:
+        - arn:aws:lambda:eu-central-1:444134189787:layer:brainfuck:1
